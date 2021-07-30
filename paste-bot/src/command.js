@@ -8,9 +8,10 @@ module.exports = (client, aliases, callback) => {
     client.on('message', (message) => {
         const { content} = message
 
-        aliases.foreach((alias) => {
+        aliases.forEach((alias) => {
             const command = `${prefix}${alias}`   
-            if (content.starsWith(`${command} ` || content === command)){
+
+            if (content.startsWith(`${command} ` || content === command)){
                     console.log(`running the command ${command}`)
                     callback(message)
             }

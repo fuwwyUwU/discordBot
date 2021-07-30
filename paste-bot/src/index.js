@@ -35,7 +35,6 @@ client.on('ready', async () => {
 
     command(client, ['c', 'copy'], message => {
         message.channel.send('pong')
-        console.log('ran')
     })
 
 })
