@@ -4,13 +4,12 @@ const {Client } = require('discord.js');
 
 const mongo = require('./mongo.js');
 
-const PrefixSchema = require('./schemas/prefix-shema')
+const PrefixSchema = require('./schemas/prefix-schema')
 
 const client  = new Client({
     partials: ['MESSAGE', 'REACTION']
 });
-
-const command = require('./command')
+const prefix = require ('./prefix')
 
 
 
@@ -24,7 +23,7 @@ client.on('ready', async () => {
     await mongo().then(mongoose => {
         try{
 
-            console.log('conneected to monoogo')
+            console.log('connected to monoogo')
         }finally{
         mongoose.connection.close()
         }
@@ -32,10 +31,7 @@ client.on('ready', async () => {
     
     console.log(`${client.user.tag} is logged in`);
 
-
-    command(client, ['c', 'copy'], message => {
-        message.channel.send('pong')
-    })
+    prefix(client)
 
 })
 

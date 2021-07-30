@@ -7,12 +7,14 @@ module.exports = (client, aliases, callback) => {
 
     client.on('message', (message) => {
         const { content } = message
+        
+        const lcontent = content.toLowerCase()
 
         aliases.forEach((alias) => {
-            const command = `${prefix}${alias}`   
+            const command = `${prefix}${alias}`.toLowerCase()   
 
-             if (content === command || content.startsWith(`${command} `)){
-                    console.log(`runnning the command ${command}`)
+            if (lcontent === command || lcontent.startsWith(`${command} `)){
+                    console.log(`runing the command ${command}`)
                     callback(message)
             }
         })
