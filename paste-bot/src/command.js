@@ -1,15 +1,16 @@
 const { mongoose } = require("mongoose")
 const mongo = require("./mongo")
 const prefix = require("./prefix")
+const PrefixSchema = require('./schemas/prefix-schema')
 
 PREFIX = "?"
 
+const cache = {} //user.id [prefiix]
 
 
 module.exports = (client, aliases, callback) => {
 
-    const cache = {} //user.id [prefiix]
-
+    
     if (typeof aliases === 'string'){
         aliases = [aliases]
     }
@@ -49,7 +50,7 @@ const OnCommand = async author => {
                 cache[author.id] = data = [result.prefix]
             }finally{
                 mongoose.connection.close()
-                PREFIX = [result.prefix]
+                PREFIX = result.prefix
             }
 
         })
