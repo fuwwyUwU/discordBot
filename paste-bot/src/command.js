@@ -54,7 +54,7 @@ const OnCommand = async author => {
 
         })
     }else {
-        PREFIX = cache[author.id].prefix
+        PREFIX = data.prefix
     }
 
 
