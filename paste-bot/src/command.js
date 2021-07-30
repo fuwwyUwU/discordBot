@@ -3,7 +3,7 @@ const mongo = require("./mongo")
 const prefix = require("./prefix")
 const PrefixSchema = require('./schemas/prefix-schema')
 
-PREFIX = "?"
+let PREFIX = "?"
 
 const cache = {} //user.id [prefiix]
 
@@ -25,6 +25,8 @@ module.exports = (client, aliases, callback) => {
         
         const lcontent = content.toLowerCase()
 
+        console.log(PREFIX)
+
         aliases.forEach((alias) => {
             const command = `${PREFIX}${alias}`.toLowerCase()   
 
@@ -41,16 +43,29 @@ const OnCommand = async author => {
 
 
     let data = cache[author.id]
+    console.log(cache[author.id] + 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
+    console.log(cache + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
 
     if (!data){
         console.log('FETCHIng FROM DATABASE')
         await mongo().then(async mongoose => {
             try {
                 const result = await PrefixSchema.findOne({_id: author.id})
+                console.log(result)
+                
+                if (result === 'undefined') {
+                    return
+                }
                 cache[author.id] = data = [result.prefix]
             }finally{
                 mongoose.connection.close()
-                PREFIX = result.prefix
+                if (result === 'undefined'){
+                    PREFIX = '<'
+                }
+                else {
+                    
+                    PREFIX = result.prefix
+                }
             }
 
         })
