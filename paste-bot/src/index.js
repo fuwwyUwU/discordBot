@@ -23,7 +23,7 @@ client.on('ready', async () => {
     await mongo().then(mongoose => {
         try{
 
-            console.log('connected to monoogo')
+            console.log('connncted to mongo')
         }finally{
         mongoose.connection.close()
         }
@@ -34,4 +34,6 @@ client.on('ready', async () => {
     prefix(client)
 
 })
+
+
 

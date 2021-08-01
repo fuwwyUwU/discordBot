@@ -39,7 +39,12 @@ module.exports = (client) => {
   
                 
                 console.log('saved')
+            }catch (err){
+
+                channel.send(err)
+
             }finally {
+                
                 mongoose.connection.close()
             }
         })

@@ -3,7 +3,11 @@ const mongo = require("./mongo")
 const prefix = require("./prefix")
 const PrefixSchema = require('./schemas/prefix-schema')
 
-let PREFIX = "?"
+let PREFIX = "<"
+
+const standardPrefix = "<"
+
+
 
 const cache = {} //user.id [prefiix]
 
@@ -11,6 +15,7 @@ const cache = {} //user.id [prefiix]
 module.exports = (client, aliases, callback) => {
 
     
+
     if (typeof aliases === 'string'){
         aliases = [aliases]
     }
@@ -18,9 +23,12 @@ module.exports = (client, aliases, callback) => {
     client.on('message', async (message) => {
         const { content } = message
 
+
+
         await OnCommand(message.author)
 
         cache[message.author.id] = [prefix]
+        
 
         
         const lcontent = content.toLowerCase()
@@ -38,41 +46,17 @@ module.exports = (client, aliases, callback) => {
     })
 }
 
-
 const OnCommand = async author => {
+    const result = await PrefixSchema.findOne({_id: author.id})
 
+    let data = result 
 
-    let data = cache[author.id]
-    console.log(cache[author.id] + 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
-    console.log(cache + 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-
-    if (!data){
-        console.log('FETCHIng FROM DATABASE')
-        await mongo().then(async mongoose => {
-            try {
-                const result = await PrefixSchema.findOne({_id: author.id})
-                console.log(result)
-                
-                if (result === 'undefined') {
-                    return
-                }
-                cache[author.id] = data = [result.prefix]
-            }finally{
-                mongoose.connection.close()
-                if (result === 'undefined'){
-                    PREFIX = '<'
-                }
-                else {
-                    
-                    PREFIX = result.prefix
-                }
-            }
-
-        })
-    }else {
-        PREFIX = data.prefix
+    if (data){
+        PREFIX = result.prefix
+    }
+    else {
+        PREFIX = standardPrefix
     }
 
-
-
 }
+
