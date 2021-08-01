@@ -44,7 +44,7 @@ module.exports = (client) => {
                 channel.send(err)
 
             }finally {
-                
+                message.reply('new prefix ' + prefix)
                 mongoose.connection.close()
             }
         })

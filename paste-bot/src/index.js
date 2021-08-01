@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const {Client } = require('discord.js');
+const {Client, Message } = require('discord.js');
 
 const mongo = require('./mongo.js');
 
@@ -10,6 +10,8 @@ const client  = new Client({
     partials: ['MESSAGE', 'REACTION']
 });
 const prefix = require ('./prefix')
+
+const command = require('./command')
 
 
 
@@ -33,7 +35,13 @@ client.on('ready', async () => {
 
     prefix(client)
 
+    command(client, ['test', 't'], message => {
+        return message.channel.send('tets')
+    })
+
 })
+
+
 
 
 

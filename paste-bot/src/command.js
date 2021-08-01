@@ -9,12 +9,12 @@ const standardPrefix = "<"
 
 
 
-const cache = {} //user.id [prefiix]
+
 
 
 module.exports = (client, aliases, callback) => {
 
-    
+    const cache = {} //user.id [prefiix]
 
     if (typeof aliases === 'string'){
         aliases = [aliases]
@@ -22,12 +22,18 @@ module.exports = (client, aliases, callback) => {
 
     client.on('message', async (message) => {
         const { content } = message
+        const { author } = message      
+        if (message.author.bot) return
+
+        cache[author.id]
+
+        
+       OnCommand(author)
+       
 
 
 
-        await OnCommand(message.author)
-
-        cache[message.author.id] = [prefix]
+       
         
 
         
@@ -35,11 +41,13 @@ module.exports = (client, aliases, callback) => {
 
         console.log(PREFIX)
 
+        cache[author.id] = PREFIX
+
         aliases.forEach((alias) => {
             const command = `${PREFIX}${alias}`.toLowerCase()   
 
             if (lcontent === command || lcontent.startsWith(`${command} `)){
-                    console.log(`runing the command ${command}`)
+                    console.log(`running the command ${command}`)
                     callback(message)
             }
         })
@@ -47,16 +55,25 @@ module.exports = (client, aliases, callback) => {
 }
 
 const OnCommand = async author => {
-    const result = await PrefixSchema.findOne({_id: author.id})
+    
+    let data = cache[author.id]
 
-    let data = result 
+    if (!data) {
+        
+        console.log('FETCHHING FROM DATABASE')
 
-    if (data){
-        PREFIX = result.prefix
+        await mongo().then(async mongoose => {
+            try {
+                const result = await PrefixSchema.findOne({ _id: author.id})
+
+                cache[author.id] = data = [result.prefix]
+            }finally {
+                mongoose.connection.close()
+            }
+        })
     }
-    else {
-        PREFIX = standardPrefix
-    }
+
+    PREFIX = data[0]
 
 }
 
